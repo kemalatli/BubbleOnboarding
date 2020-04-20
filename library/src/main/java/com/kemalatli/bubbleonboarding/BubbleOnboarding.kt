@@ -9,9 +9,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import com.kemalatli.bubbleonboarding.background.BubbleBackgroundView
-import com.kemalatli.bubbleonboarding.shape.CircleFocalShape
-import com.kemalatli.bubbleonboarding.shape.RectangleFocalShape
-import com.kemalatli.bubbleonboarding.shape.base.FocalShape
+import com.kemalatli.bubbleonboarding.focus.CircleFocalShape
+import com.kemalatli.bubbleonboarding.focus.RectangleFocalShape
+import com.kemalatli.bubbleonboarding.focus.base.FocalShape
 
 class BubbleOnboarding internal constructor():LifecycleObserver, View.OnClickListener {
 
@@ -61,6 +61,7 @@ class BubbleOnboarding internal constructor():LifecycleObserver, View.OnClickLis
             backgroundView?.focalShape = focalShape
             backgroundView?.maskColor = backColor
             backgroundView?.setOnClickListener(this)
+            backgroundView?.initialize()
             (it.window.decorView as ViewGroup?)?.addView(backgroundView)
         }
         return this

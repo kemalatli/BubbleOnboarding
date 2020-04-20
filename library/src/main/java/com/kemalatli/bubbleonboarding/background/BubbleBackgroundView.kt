@@ -5,7 +5,9 @@ import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.util.AttributeSet
 import android.widget.FrameLayout
-import com.kemalatli.bubbleonboarding.shape.base.FocalShape
+import androidx.core.view.marginTop
+import com.kemalatli.bubbleonboarding.content.bubble.BubbleDrawable
+import com.kemalatli.bubbleonboarding.focus.base.FocalShape
 
 
 internal class BubbleBackgroundView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : FrameLayout(context, attrs, defStyleAttr) {
@@ -19,6 +21,19 @@ internal class BubbleBackgroundView @JvmOverloads constructor(context: Context, 
 
     init {
         setWillNotDraw(false)
+    }
+
+    fun initialize(){
+        val shape = focalShape ?: return
+        val frameLayout = FrameLayout(context)
+        val layoutParams = MarginLayoutParams(shape.width.toInt(), shape.heigth.toInt())
+        layoutParams.setMargins(shape.viewX.toInt(),shape.viewY.toInt()-shape.heigth.toInt(),0,0)
+        frameLayout.layoutParams = layoutParams
+        frameLayout.background = BubbleDrawable.Builder()
+            .rect(RectF(0f,0f,shape.width,shape.heigth))
+            .arrowCenter(true)
+            .build()
+        addView(frameLayout)
     }
 
     override fun onDraw(canvas: Canvas?) {

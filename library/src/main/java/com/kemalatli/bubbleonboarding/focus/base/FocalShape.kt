@@ -1,4 +1,4 @@
-package com.kemalatli.bubbleonboarding.shape.base
+package com.kemalatli.bubbleonboarding.focus.base
 
 import android.graphics.Canvas
 import android.graphics.Paint
