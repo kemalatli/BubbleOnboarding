@@ -1,12 +1,17 @@
 package com.kemalatli.bubbleonboarding.background
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.util.AttributeSet
+import android.view.View
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
-import androidx.core.view.marginTop
+import androidx.core.view.doOnLayout
+import com.kemalatli.bubbleonboarding.content.bubble.ArrowLocation
 import com.kemalatli.bubbleonboarding.content.bubble.BubbleDrawable
+import com.kemalatli.bubbleonboarding.content.bubble.BubbleType
 import com.kemalatli.bubbleonboarding.focus.base.FocalShape
 
 
@@ -23,17 +28,71 @@ internal class BubbleBackgroundView @JvmOverloads constructor(context: Context, 
         setWillNotDraw(false)
     }
 
-    fun initialize(){
+    fun addBubble(bubble: View?, builder: BubbleDrawable.Builder) {
+
+        // Bubble check
+        if(bubble==null) return
+        // Shape check
         val shape = focalShape ?: return
-        val frameLayout = FrameLayout(context)
-        val layoutParams = MarginLayoutParams(shape.width.toInt(), shape.heigth.toInt())
-        layoutParams.setMargins(shape.viewX.toInt(),shape.viewY.toInt()-shape.heigth.toInt(),0,0)
-        frameLayout.layoutParams = layoutParams
-        frameLayout.background = BubbleDrawable.Builder()
-            .rect(RectF(0f,0f,shape.width,shape.heigth))
-            .arrowCenter(true)
-            .build()
-        addView(frameLayout)
+        // Screen width
+        val screenWidth = Resources.getSystem().displayMetrics.widthPixels;
+        // Add bubble to measure
+        bubble.measure(0,0)
+        // Layout margins
+        var arrowCenter = true
+        var left = 0
+        var top = 0
+        var bottom = 0
+        var right = 0
+        when(builder.arrowLocation){
+            is ArrowLocation.Bottom -> {
+                left = (shape.viewX - (bubble.measuredWidth-shape.width)/2).toInt()
+                top = (shape.viewY - bubble.measuredHeight - builder.bubbleMargin).toInt()
+                // Check right
+                if(left + bubble.measuredWidth > screenWidth){
+                    left = screenWidth - bubble.measuredWidth
+                    builder.arrowPosition(shape.viewX+shape.width/2-left)
+                    arrowCenter = false
+                }
+                // Check left
+                if(left<0){
+                    left = 0
+                    builder.arrowPosition(shape.viewX+shape.width/2-left)
+                    arrowCenter = false
+                }
+            }
+            is ArrowLocation.Top -> {
+                left = (shape.viewX - (bubble.measuredWidth-shape.width)/2).toInt()
+                top = (shape.viewY + shape.heigth + builder.bubbleMargin).toInt()
+                // Check right
+                if(left + bubble.measuredWidth > screenWidth){
+                    left = screenWidth - bubble.measuredWidth
+                    builder.arrowPosition(shape.viewX+shape.width/2-left)
+                    arrowCenter = false
+                }
+                // Check left
+                if(left<0){
+                    left = 0
+                    builder.arrowPosition(shape.viewX+shape.width/2-left)
+                    arrowCenter = false
+                }
+            }
+            is ArrowLocation.Left -> {
+                left = (shape.viewX + shape.width + builder.bubbleMargin).toInt()
+                top = (shape.viewY - (bubble.measuredHeight-shape.heigth)/2).toInt()
+            }
+            is ArrowLocation.Right -> {
+                left = (shape.viewX - builder.bubbleMargin - bubble.measuredWidth).toInt()
+                top = (shape.viewY - (bubble.measuredHeight-shape.heigth)/2).toInt()
+            }
+        }
+        val layoutParams =  LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
+        layoutParams.setMargins(left, top, right, bottom)
+        bubble.layoutParams = layoutParams
+        addView(bubble)
+        // Add bubble background
+        bubble.background = builder.rect(RectF(0f,0f, bubble.measuredWidth.toFloat(), bubble.measuredHeight.toFloat())).arrowCenter(arrowCenter).build()
+
     }
 
     override fun onDraw(canvas: Canvas?) {

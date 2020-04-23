@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
 import com.kemalatli.bubbleonboarding.BubbleOnboarding
+import com.kemalatli.bubbleonboarding.content.bubble.ArrowLocation
 import kotlinx.android.synthetic.main.fragment_first.*
 
 /**
@@ -37,6 +38,7 @@ class FirstFragment : Fragment(), View.OnClickListener {
         if (v != null) {
             BubbleOnboarding.with(requireActivity())
                 .focusInRectangle(v)
+                .arrowLocation(ArrowLocation.Right())
                 .liveIn(lifecycle)
                 .show()
         }

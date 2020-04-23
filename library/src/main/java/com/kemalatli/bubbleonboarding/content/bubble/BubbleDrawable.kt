@@ -2,6 +2,8 @@ package com.kemalatli.bubbleonboarding.content.bubble
 
 import android.graphics.*
 import android.graphics.drawable.Drawable
+import com.kemalatli.bubbleonboarding.BubbleOnboarding
+import kotlin.math.tan
 
 class BubbleDrawable: Drawable {
 
@@ -14,6 +16,7 @@ class BubbleDrawable: Drawable {
     private var bubbleType: BubbleType
     private val arrowCenter:Boolean
 
+    private var bitmapShader:BitmapShader? = null
     private val path = Path()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -23,19 +26,50 @@ class BubbleDrawable: Drawable {
         this.arrowHeight = builder.arrowHeight
         this.arrowWidth = builder.arrowWidth
         this.arrowPosition = builder.arrowPosition
-        this.arrowLocation = builder.mArrowLocation
+        this.arrowLocation = builder.arrowLocation
         bubbleType = builder.bubbleType
         this.arrowCenter = builder.arrowCenter
     }
 
 
     override fun draw(canvas: Canvas) {
-        val type = bubbleType
-        when (type) {
-            is BubbleType.SolidColor -> paint.color = type.color
+        val rectangle = rect ?: return
+        when (val type = bubbleType) {
+            is BubbleType.SolidColor -> {
+                paint.color = type.color
+            }
+            is BubbleType.GradientColor -> {
+                // Create bitmap
+                val bitmap =  Bitmap.createBitmap(rectangle.width().toInt() , rectangle.height().toInt(), Bitmap.Config.ARGB_8888)
+                val bitmapCanvas = Canvas(bitmap)
+                val linearGradient = LinearGradient(0f, 0f, rectangle.width(), rectangle.width() * tan(Math.toRadians(type.ange.toDouble())).toFloat(), type.startColor, type.endColor, Shader.TileMode.CLAMP)
+                paint.isDither = true
+                paint.shader = linearGradient
+                bitmapCanvas.drawRect(rectangle, paint)
+
+                if (bitmapShader == null) {
+                    bitmapShader = BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+                }
+                paint.shader = bitmapShader
+                setUpShaderMatrix(bitmap)
+            }
         }
         setUpPath(arrowLocation, path)
         canvas.drawPath(path, paint)
+    }
+
+    private fun setUpShaderMatrix(bitmap:Bitmap) {
+        val scale: Float
+        val mShaderMatrix = Matrix()
+        mShaderMatrix.set(null)
+        val mBitmapWidth: Int = bitmap.width
+        val mBitmapHeight: Int = bitmap.height
+        val scaleX = intrinsicWidth / mBitmapWidth.toFloat()
+        val scaleY = intrinsicHeight / mBitmapHeight.toFloat()
+        scale = Math.min(scaleX, scaleY)
+        mShaderMatrix.postScale(scale, scale)
+        mShaderMatrix.postTranslate(rect?.left ?:0f, rect?.top ?: 0f)
+        bitmapShader?.setLocalMatrix(mShaderMatrix)
     }
 
     private fun setUpPath(mArrowLocation: ArrowLocation, path: Path) {
@@ -146,8 +180,9 @@ class BubbleDrawable: Drawable {
         internal var arrowHeight = DEFAULT_ARROW_HEIGHT
         internal var arrowPosition = DEFAULT_ARROW_POSITION
         internal var bubbleType: BubbleType = BubbleType.SolidColor(Color.RED)
-        internal var mArrowLocation: ArrowLocation = ArrowLocation.Bottom()
+        internal var arrowLocation: ArrowLocation = ArrowLocation.Bottom()
         internal var arrowCenter = false
+        internal var bubbleMargin = 20
 
         fun rect(rect: RectF?): Builder {
             mRect = rect
@@ -175,7 +210,7 @@ class BubbleDrawable: Drawable {
         }
 
         fun arrowLocation(arrowLocation: ArrowLocation): Builder {
-            mArrowLocation = arrowLocation
+            this.arrowLocation = arrowLocation
             return this
         }
 
@@ -186,6 +221,11 @@ class BubbleDrawable: Drawable {
 
         fun arrowCenter(arrowCenter: Boolean): Builder {
             this.arrowCenter = arrowCenter
+            return this
+        }
+
+        fun bubbleMargin(bubbleMargin: Int): Builder {
+            this.bubbleMargin = bubbleMargin
             return this
         }
 

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout   android:theme="@style/Theme.MaterialComponents"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:theme="@style/Theme.MaterialComponents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_marginTop="22dp"
+            android:layout_marginHorizontal="22dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:text="¿Lo has probado y te ha gustado? "
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </TextView>
+
+        <TextView
+            android:id="@+id/subtitle"
+            android:layout_marginTop="8dp"
+            android:layout_marginHorizontal="22dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:text="¡Cuenta a otrxs Pickers qué es lo que más te ha gustado de este producto!"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+        </TextView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ok"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/subtitle"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:text="¡Top!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </com.google.android.material.button.MaterialButton>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/skip"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/ok"
+            app:layout_constraintTop_toBottomOf="@id/subtitle"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:text="¡Top!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </com.google.android.material.button.MaterialButton>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
