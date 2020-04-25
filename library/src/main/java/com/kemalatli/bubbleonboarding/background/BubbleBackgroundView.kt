@@ -42,12 +42,12 @@ internal class BubbleBackgroundView @JvmOverloads constructor(context: Context, 
         var arrowCenter = true
         var left = 0
         var top = 0
-        var bottom = 0
-        var right = 0
+        var bubbleWidth = bubble.measuredWidth.toFloat()
+        var bubbleHeight = bubble.measuredHeight.toFloat()
         when(builder.arrowLocation){
             is ArrowLocation.Bottom -> {
                 left = (shape.viewX - (bubble.measuredWidth-shape.width)/2).toInt()
-                top = (shape.viewY - bubble.measuredHeight - builder.bubbleMargin).toInt()
+                top = (shape.viewY - bubble.measuredHeight - builder.bubbleMargin-builder.arrowHeight).toInt()
                 // Check right
                 if(left + bubble.measuredWidth > screenWidth){
                     left = screenWidth - bubble.measuredWidth
@@ -60,10 +60,11 @@ internal class BubbleBackgroundView @JvmOverloads constructor(context: Context, 
                     builder.arrowPosition(shape.viewX+shape.width/2-left)
                     arrowCenter = false
                 }
+                bubbleHeight += builder.arrowHeight
             }
             is ArrowLocation.Top -> {
                 left = (shape.viewX - (bubble.measuredWidth-shape.width)/2).toInt()
-                top = (shape.viewY + shape.heigth + builder.bubbleMargin).toInt()
+                top = (shape.viewY + shape.heigth + builder.bubbleMargin+builder.arrowHeight).toInt()
                 // Check right
                 if(left + bubble.measuredWidth > screenWidth){
                     left = screenWidth - bubble.measuredWidth
@@ -76,22 +77,25 @@ internal class BubbleBackgroundView @JvmOverloads constructor(context: Context, 
                     builder.arrowPosition(shape.viewX+shape.width/2-left)
                     arrowCenter = false
                 }
+                bubbleHeight += builder.arrowHeight
             }
             is ArrowLocation.Left -> {
-                left = (shape.viewX + shape.width + builder.bubbleMargin).toInt()
+                left = (shape.viewX + shape.width + builder.bubbleMargin+builder.arrowHeight).toInt()
                 top = (shape.viewY - (bubble.measuredHeight-shape.heigth)/2).toInt()
+                bubbleWidth += builder.arrowHeight
             }
             is ArrowLocation.Right -> {
-                left = (shape.viewX - builder.bubbleMargin - bubble.measuredWidth).toInt()
+                left = (shape.viewX - builder.bubbleMargin - bubble.measuredWidth-builder.arrowHeight).toInt()
                 top = (shape.viewY - (bubble.measuredHeight-shape.heigth)/2).toInt()
+                bubbleWidth += builder.arrowHeight
             }
         }
         val layoutParams =  LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
-        layoutParams.setMargins(left, top, right, bottom)
+        layoutParams.setMargins(left, top, 0, 0)
         bubble.layoutParams = layoutParams
         addView(bubble)
         // Add bubble background
-        bubble.background = builder.rect(RectF(0f,0f, bubble.measuredWidth.toFloat(), bubble.measuredHeight.toFloat())).arrowCenter(arrowCenter).build()
+        bubble.background = builder.rect(RectF(0f,0f, bubbleWidth, bubbleHeight)).arrowCenter(arrowCenter).build()
 
     }
 

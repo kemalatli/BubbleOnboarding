@@ -42,7 +42,7 @@ class BubbleDrawable: Drawable {
                 // Create bitmap
                 val bitmap =  Bitmap.createBitmap(rectangle.width().toInt() , rectangle.height().toInt(), Bitmap.Config.ARGB_8888)
                 val bitmapCanvas = Canvas(bitmap)
-                val linearGradient = LinearGradient(0f, 0f, rectangle.width(), rectangle.width() * tan(Math.toRadians(type.ange.toDouble())).toFloat(), type.startColor, type.endColor, Shader.TileMode.CLAMP)
+                val linearGradient = LinearGradient(0f, 0f, rectangle.height() * tan(Math.toRadians(type.ange.toDouble())).toFloat(), rectangle.height(), type.startColor, type.endColor, Shader.TileMode.CLAMP)
                 paint.isDither = true
                 paint.shader = linearGradient
                 bitmapCanvas.drawRect(rectangle, paint)
