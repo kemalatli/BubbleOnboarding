@@ -22,6 +22,10 @@ class MainActivity : AppCompatActivity() {
                 .liveIn(lifecycle)
                 .focusInCircle(view)
                 .backColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .title("Here is a title")
+                .subtitle("This is a long description of what we can do with this library. This long text should be handled.")
+                .okLabel("Ok got it")
+                .cancelLabel("No forget it!")
                 .show()
         }
     }

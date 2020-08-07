@@ -40,6 +40,10 @@ class FirstFragment : Fragment(), View.OnClickListener {
                 .focusInRectangle(v)
                 .arrowLocation(ArrowLocation.Right())
                 .liveIn(lifecycle)
+                .title("Here is a title")
+                .subtitle("This is a long description of what we can do with this library. This long text should be handled.")
+                .okLabel("Ok got it")
+                .cancelLabel("No forget it!")
                 .show()
         }
     }

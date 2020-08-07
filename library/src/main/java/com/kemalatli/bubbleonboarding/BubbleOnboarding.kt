@@ -37,7 +37,7 @@ class BubbleOnboarding internal constructor():LifecycleObserver, View.OnClickLis
     private var angle = BubbleDrawable.Builder.DEFAULT_ANGLE
     private var arrowHeight = BubbleDrawable.Builder.DEFAULT_ARROW_HEIGHT
     private var arrowLocation: ArrowLocation = ArrowLocation.Bottom()
-    private var bubbleType:BubbleType = BubbleType.SolidColor(Color.YELLOW)
+    private var bubbleType:BubbleType = BubbleType.SolidColor(Color.RED)
     private var bubbleMargin:Int = 20
     private var bubbleId:String = "key"
 
